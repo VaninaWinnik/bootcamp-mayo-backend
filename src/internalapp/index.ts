@@ -2,21 +2,22 @@
 import {spawn} from 'child_process';
 import {createPathTemp} from '../service/controllers/utils.controller';
 
-const [nodeParam, fileExecuteParam, firstParams, secondParams] = process.argv;
-
+const [,, firstParams] = process.argv;
 
 const sendDataToOS = (inputVideoSource: string) => {
-  const inputVideoSrc = `${__dirname}/${inputVideoSource}`;
-  const outputVideoSrc = createPathTemp(inputVideoSource, 'mp4');
+  const inputVideoSrc = 'src/internalapp/' + `${inputVideoSource}`;
+  const outputVideoSrc = createPathTemp('Video7', 'mp4');
 
-  const principalCommand = 'ffprobe';
+  const principalCommand = 'ffmpeg';
   const args = [
-    '-fflags',
-    '+genpts',
+    '-f',
+    'concat',
     '-i',
     `${inputVideoSrc}`,
-    '-r',
-    '24',
+    '-c',
+    'copy',
+    '-bsf:a',
+    'aac_adtstoasc',
     `${outputVideoSrc}`];
   const options = {
     shell: true,
